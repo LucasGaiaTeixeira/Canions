@@ -7,13 +7,11 @@ public class BoatController : BoatInputs
     [SerializeField] private float speedBoat;
     [SerializeField] private float speedBoatRotation;
     private bool boatController;
-    private PlayerMoviment instanciaPlayerToBoat;
+    
 
     void Start()
     {
         boat = GetComponent<CharacterController>();
-        instanciaPlayerToBoat = GetComponent<PlayerMoviment>();
-        
     }
 
     void FixedUpdate()
@@ -26,13 +24,11 @@ public class BoatController : BoatInputs
         }
     }
 
-    private void Update()
+    
+
+    public void OnTriggerEnter(Collider collison)
     {
-        if (instanciaPlayerToBoat)
-        {
-            boatController = false;
-        }
-        else
+        if (collison.gameObject.CompareTag("Player"))
         {
             boatController = true;
         }

@@ -10,13 +10,13 @@ public class PlayerMoviment : PlayerInputs
     [SerializeField] public bool playerController = true;
     [SerializeField] public GameObject collisionObject;
     private bool PlayerStayBoat = false;
-    public static PlayerMoviment Instance;
+    //public static PlayerMoviment Instance;
 
 
     void Start()
     {
         playerControlle = GetComponent<CharacterController>();
-        Instance = this;
+        //Instance = this;
     }
 
     private void Update()
