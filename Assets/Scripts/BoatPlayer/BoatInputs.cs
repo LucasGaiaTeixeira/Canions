@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 public class BoatInputs : MonoBehaviour
 {
     protected Vector3 posicaoBoat;
-    protected bool boatJump;
+    protected bool boatChardingSuperJump;
+    protected bool boatCanceledSuperJump;
 
     public void BoatInputMover(InputAction.CallbackContext context)
     {
@@ -13,9 +14,15 @@ public class BoatInputs : MonoBehaviour
 
     public void BoatInputJump(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started || context.performed)
         {
-            boatJump = true;
+            boatChardingSuperJump = true;
+            boatCanceledSuperJump = false;
+        }
+        else if (context.canceled)
+        {
+            boatChardingSuperJump = false;
+            boatCanceledSuperJump = true;
         }
     }
 }
