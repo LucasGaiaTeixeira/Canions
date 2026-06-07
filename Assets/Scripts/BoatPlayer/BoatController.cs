@@ -7,6 +7,7 @@ public class BoatController : BoatInputs
     private Rigidbody rigBoat;
     public bool boatControllerAll = true;
     public AudioSource backgroundMusic;
+    public AudioSource audioFishEatBoat;
 
     [Header("Movimentação do Barco")]
     [SerializeField] private float speedBoat;
@@ -261,14 +262,17 @@ public class BoatController : BoatInputs
             if (animatorFishDown != null)
             {
                 animatorFishDown.SetTrigger("atack");
+                yield return new WaitForSeconds(0.5f);
+                audioFishEatBoat.Play();
             }
         }
 
-        yield return new WaitForSeconds(2.68f);
+        yield return new WaitForSeconds(2.1f);
 
         Debug.Log("GAME OVER: O jogador foi devorado!");
         if (playerBody != null) Destroy(playerBody);
         backgroundMusic.Stop();
+        
         Destroy(gameObject);
     }
 
