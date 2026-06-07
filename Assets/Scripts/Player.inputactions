@@ -16,7 +16,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "EnterBoat",
+                    "name": "Jump",
                     "type": "Button",
                     "id": "0400d452-18d7-4978-b6f9-ec7fa45c1025",
                     "expectedControlType": "",
@@ -106,11 +106,11 @@
                 {
                     "name": "",
                     "id": "e9e4900c-1cc6-4abf-9e6b-a1af53a8d494",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "EnterBoat",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
