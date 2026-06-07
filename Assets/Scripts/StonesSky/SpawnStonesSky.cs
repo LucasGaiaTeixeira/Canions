@@ -30,8 +30,8 @@ public class SpawnStonesSky : MonoBehaviour
         // Criamos uma lista temporária para não spawnar duas pedras no mesmo lugar logo no Start
         List<Transform> pontosDisponiveis = new List<Transform>(PointSpawn);
 
-        // Loop fixo para criar exatamente 6 pedras
-        for (int i = 0; i < 6; i++)
+        // Loop fixo para criar exatamente 8 pedras
+        for (int i = 0; i <= 8; i++)
         {
             if (pontosDisponiveis.Count == 0) break;
 
@@ -58,7 +58,7 @@ public class SpawnStonesSky : MonoBehaviour
             yield return new WaitForSeconds(tempoDeEspera);
 
             // Criamos uma cópia nova dos 53 pontos a cada ciclo.
-            // Isso serve para garantir que as 6 pedras escolham lugares únicos nesta rodada!
+            // Isso serve para garantir que as 8 pedras escolham lugares únicos nesta rodada!
             List<Transform> pontosLivresDestaRodada = new List<Transform>(PointSpawn);
 
             // Passamos por cada uma das 6 pedras criadas e mudamos o transform delas
@@ -88,7 +88,7 @@ public class SpawnStonesSky : MonoBehaviour
                 }
             }
 
-            Debug.Log("As 6 pedras foram teletransportadas para novas posições aleatórias!");
+            Debug.Log("As 8 pedras foram teletransportadas para novas posições aleatórias!");
         }
     }
 }

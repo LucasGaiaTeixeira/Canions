@@ -93,17 +93,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "backward",
-                    "id": "efc53581-740e-4157-89fc-547feff2431b",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Moviment",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
                     "id": "e9e4900c-1cc6-4abf-9e6b-a1af53a8d494",
                     "path": "<Keyboard>/space",

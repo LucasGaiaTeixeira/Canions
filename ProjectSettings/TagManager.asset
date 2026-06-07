@@ -7,6 +7,7 @@ TagManager:
   - Boat
   - GroundBoat
   - Stone
+  - Obstacles
   layers:
   - Default
   - TransparentFX
