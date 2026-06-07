@@ -8,13 +8,7 @@ public class MainMenuGenerator : MonoBehaviour
     [MenuItem("Tools/Gerar Menu Principal")]
     public static void GenerateMainMenu()
     {
-        // Criação do Event System (se não existir)
-        if (FindObjectOfType<EventSystem>() == null)
-        {
-            GameObject eventSystem = new GameObject("EventSystem");
-            eventSystem.AddComponent<EventSystem>();
-            eventSystem.AddComponent<StandaloneInputModule>();
-        }
+
 
         // 1. Criação do Canvas
         GameObject canvasObj = new GameObject("Canvas");
