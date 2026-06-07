@@ -3,15 +3,19 @@ using UnityEngine;
 
 public class BoatController : BoatInputs
 {
+
+    [Header("coisas principais")]
     private Rigidbody rigBoat;
-     
+    public bool boatControllerAll = true;
+
+   // public static BoatController boatControllerScript;
 
 
     [Header("movimentação do barco")]
     [SerializeField] private float speedBoat;
     [SerializeField] private float speedBoatRotation;
     [SerializeField] private bool boatController;
-    [SerializeField] private Vector3 alcancePulo;
+    
 
 
     [Header("atributos do barco")]
@@ -41,70 +45,88 @@ public class BoatController : BoatInputs
     {
         rigBoat = GetComponent<Rigidbody>();
         boatRenderer = GetComponent<Renderer>();
-       
+        //boatControllerScript = this;
     }
 
     void FixedUpdate()
     {
-        if (boatController && canJump == true)
+        if (boatControllerAll)
         {
-            // 1. MOVIMENTO PARA FRENTE E PARA TRÁS (Usando o eixo Z do seu Vector3)
-            if (Mathf.Abs(posicaoBoat.z) > 0.01f)
+            if (boatController)
             {
-                // Criamos uma força empurrando sempre para onde a frente do barco aponta (transform.forward)
-                Vector3 forcaMotor = transform.forward * posicaoBoat.z * speedBoat;
-                rigBoat.AddForce(forcaMotor * Time.fixedDeltaTime, ForceMode.Force);
-            }
+                //// 1. MOVIMENTO PARA FRENTE E PARA TRÁS (Usando o eixo Z do seu Vector3)
+                //if (Mathf.Abs(posicaoBoat.z) > 0.01f)
+                //{
+                //    // Criamos uma força empurrando sempre para onde a frente do barco aponta (transform.forward)
+                //    Vector3 forcaMotor = transform.forward * posicaoBoat.z * speedBoat;
+                //    rigBoat.AddForce(forcaMotor * Time.fixedDeltaTime, ForceMode.Force);
+                //}
 
-            // 2. ROTAÇÃO REALISTA PARA OS LADOS (Usando o eixo X do seu Vector3)
-            if (Mathf.Abs(posicaoBoat.x) > 0.01f)
-            {
-                // Criamos um torque (força de rotação) no eixo Y do mundo (transform.up)
-                Vector3 torqueLeme = transform.up * posicaoBoat.x * speedBoatRotation;
-                rigBoat.AddTorque(torqueLeme * Time.fixedDeltaTime, ForceMode.Force);
-            }
-        }
-
-        if (boatCanceledSuperJump)
-        {
-            boatCanceledSuperJump = false; // Consome o input
-
-            if (canJump)
-            {
-                canJump = false; // Remove a permissão de pular (está no ar)
-
-                // CENÁRIO A: Toque rápido -> Pulo Normal
-                if (timeCharging <= timeJumpNormal)
+                //// 2. ROTAÇÃO REALISTA PARA OS LADOS (Usando o eixo X do seu Vector3)
+                //if (Mathf.Abs(posicaoBoat.x) > 0.01f)
+                //{
+                //    // Criamos um torque (força de rotação) no eixo Y do mundo (transform.up)
+                //    Vector3 torqueLeme = transform.up * posicaoBoat.x * speedBoatRotation;
+                //    rigBoat.AddTorque(torqueLeme * Time.fixedDeltaTime, ForceMode.Force);
+                //}
+                // 1. MOVIMENTO PARA FRENTE E PARA TRÁS
+                if (Mathf.Abs(posicaoBoat.z) > 0.01f)
                 {
-                    Debug.Log("Pulo Normal executado!");
-                    // Aplica o pulo normal reto para cima
-                    rigBoat.AddForce(forceJumpNormal, ForceMode.Impulse);
+                    // Mudamos para VelocityChange (ignora a massa e aplica velocidade instantânea)
+                    Vector3 forcaMotor = transform.forward * posicaoBoat.z * speedBoat;
+                    rigBoat.AddForce(forcaMotor * Time.fixedDeltaTime, ForceMode.VelocityChange);
                 }
-                // CENÁRIO B: Segurou o botão -> Super Pulo Proporcional
-                else
+
+                // 2. ROTAÇÃO REALISTA PARA OS LADOS
+                if (Mathf.Abs(posicaoBoat.x) > 0.01f)
                 {
-                    Debug.Log("SUPER PULO DETONADO!");
-
-                    // Calcula a porcentagem com base nos 5 segundos máximos
-                    float porcentagemCarga = timeCharging / timeChargeMax;
-
-                    float forcaVerticalFinal = forceJumpVerticalMax * porcentagemCarga;
-                    float forcaHorizontalFinal = forceJumpHorizontalMax * porcentagemCarga;
-
-                    // Lança para cima e para a frente do barco
-                    Vector3 direcaoSuperPulo = (transform.up * forcaVerticalFinal) + (transform.forward * forcaHorizontalFinal);
-                    rigBoat.AddForce(direcaoSuperPulo, ForceMode.Impulse);
+                    // Mudamos para VelocityChange na rotação também
+                    Vector3 torqueLeme = transform.up * posicaoBoat.x * speedBoatRotation;
+                    rigBoat.AddTorque(torqueLeme * Time.fixedDeltaTime, ForceMode.VelocityChange);
                 }
             }
 
-            // Sempre reseta o cronômetro para o próximo clique
-            timeCharging = 0f;
-        }
+            if (boatCanceledSuperJump)
+            {
+                boatCanceledSuperJump = false; // Consome o input
 
+                if (canJump)
+                {
+                    canJump = false; // Remove a permissão de pular (está no ar)
+
+                    // CENÁRIO A: Toque rápido -> Pulo Normal
+                    if (timeCharging <= timeJumpNormal)
+                    {
+                        Debug.Log("Pulo Normal executado!");
+                        // Aplica o pulo normal reto para cima
+                        rigBoat.AddForce(forceJumpNormal, ForceMode.Impulse);
+                    }
+                    // CENÁRIO B: Segurou o botão -> Super Pulo Proporcional
+                    else
+                    {
+                        Debug.Log("SUPER PULO DETONADO!");
+
+                        // Calcula a porcentagem com base nos 5 segundos máximos
+                        float porcentagemCarga = timeCharging / timeChargeMax;
+
+                        float forcaVerticalFinal = forceJumpVerticalMax * porcentagemCarga;
+                        float forcaHorizontalFinal = forceJumpHorizontalMax * porcentagemCarga;
+
+                        // Lança para cima e para a frente do barco
+                        Vector3 direcaoSuperPulo = (transform.up * forcaVerticalFinal) + (transform.forward * forcaHorizontalFinal);
+                        rigBoat.AddForce(direcaoSuperPulo, ForceMode.Impulse);
+                    }
+                }
+
+                // Sempre reseta o cronômetro para o próximo clique
+                timeCharging = 0f;
+            }
+        }
     }
 
     void Update()
     {
+        Debug.Log(boatControllerAll);
         if(vida <= 0)
         {
             Destroy(gameObject);
@@ -125,16 +147,7 @@ public class BoatController : BoatInputs
         }
     }
 
-    public void OnTriggerEnter(Collider collison)
-    {
-        if (collison.gameObject.CompareTag("Player"))
-        {
-            boatController = true;
-        }else if (collison.gameObject.CompareTag("Stone"))
-        {
-            takeDamage();
-        }
-    }
+    
 
     public void takeDamage()
     {
@@ -149,18 +162,29 @@ public class BoatController : BoatInputs
         boatRenderer.material.color = originalColor;
     }
 
+
+    
+
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("GroundBoat"))
         {
             canJump = true;
             rigBoat.linearDamping = boatInWater;
+            boatController = true;
         }
+        else if (collision.gameObject.CompareTag("Stone"))
+        {
+            takeDamage();
+        }
+        
+
     }
     public void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("GroundBoat"))
         {
+            boatController = false;
             rigBoat.linearDamping = boatOutWater;
         }
     }

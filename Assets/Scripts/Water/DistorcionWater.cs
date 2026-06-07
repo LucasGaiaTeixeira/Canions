@@ -3,22 +3,6 @@ using UnityEngine;
 
 public class DistorcionWater : MonoBehaviour
 {
-    //[SerializeField] private Material waterMaterial;
-    //[SerializeField] private float valorDistortion;
-
-    //void Update()
-    //{
-    //    waterDistorcion();
-    //    if (waterMaterial.GetFloat("Vector1_F6B82B81") > 0.018)
-    //    {
-    //        waterMaterial.SetFloat("Vector1_F6B82B81", 0.016f);
-    //    }
-    //}
-
-    //public void waterDistorcion()
-    //{
-    //    waterMaterial.SetFloat("Vector1_F6B82B81", waterMaterial.GetFloat("Vector1_F6B82B81") + valorDistortion);
-    //}
 
     [SerializeField] private Material waterMaterial;
 
