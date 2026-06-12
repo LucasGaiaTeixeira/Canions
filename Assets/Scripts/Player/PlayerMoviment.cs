@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class PlayerMoviment : PlayerInputs
 {
-    private CharacterController playerControlle;
+    [SerializeField] private CharacterController playerControlle;
     
     [SerializeField] Transform boatPlayerPosition;
     [SerializeField] private float speed;
     [SerializeField] public bool playerController = true;
-    
+    public bool boatCanMove = false;
     
 
     void Start()
@@ -24,6 +24,7 @@ public class PlayerMoviment : PlayerInputs
         }
     }
 
+
     private void OnTriggerEnter(Collider collision)
     {
         
@@ -31,7 +32,7 @@ public class PlayerMoviment : PlayerInputs
         if (collision.gameObject.CompareTag("Boat"))
         {
             playerController = false;
-            
+            boatCanMove = true;
 
             // CORREÇÃO: Desativa o CharacterController para não brigar com o posicionamento
             if (playerControlle != null) playerControlle.enabled = false;

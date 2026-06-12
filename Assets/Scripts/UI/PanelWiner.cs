@@ -4,12 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class TelaGameOver : MonoBehaviour
 {
-    public GameObject PanelGameOver; 
-    public void OnCollisionEnter(Collision collision)
+    public GameObject PanelGameWin; 
+    public void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            gameObject.SetActive(true);
+            PanelGameWin.SetActive(true);
         }
     }
 

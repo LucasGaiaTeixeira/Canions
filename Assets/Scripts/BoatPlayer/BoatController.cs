@@ -1,19 +1,23 @@
 using System.Collections;
+using Unity.VectorGraphics;
 using UnityEngine;
 
 public class BoatController : BoatInputs
 {
+    [SerializeField] private PlayerMoviment ScriptPlayerMoviment;
+
     [Header("Coisas Principais")]
     private Rigidbody rigBoat;
     public bool boatControllerAll = true;
 
-    public AudioSource audioFishEatBoat; 
-    
-        
+    public AudioSource audioFishEatBoat;
+    public GameObject PanelGameOver2;
+
     [Header("Movimentação do Barco")]
     [SerializeField] private float speedBoat;
     [SerializeField] private float speedBoatRotation;
     [SerializeField] private bool boatController;
+    private bool boatCanMove;
 
     [Header("Atributos do Barco")]
     [SerializeField] private int maxLife = 2;
@@ -57,6 +61,7 @@ public class BoatController : BoatInputs
 
     void Start()
     {
+        //ScriptPlayerMoviment = GetComponent<PlayerMoviment>();
         rigBoat = GetComponent<Rigidbody>();
         boatRenderer = GetComponent<Renderer>();
 
@@ -81,56 +86,65 @@ public class BoatController : BoatInputs
             animatorFishDown = fishDown.GetComponent<Animator>();
             fishDown.SetActive(false); // Começa desligado
         }
+        
     }
 
     void FixedUpdate()
     {
-        if (boatControllerAll)
+        if (boatCanMove)
         {
-            if (boatController)
+
+            if (boatControllerAll)
             {
-                if (Mathf.Abs(posicaoBoat.z) > 0.01f)
+                if (boatController)
                 {
-                    Vector3 forcaMotor = transform.forward * posicaoBoat.z * speedBoat;
-                    rigBoat.AddForce(forcaMotor * Time.fixedDeltaTime, ForceMode.VelocityChange);
-                }
-
-                if (Mathf.Abs(posicaoBoat.x) > 0.01f)
-                {
-                    Vector3 torqueLeme = transform.up * posicaoBoat.x * speedBoatRotation;
-                    rigBoat.AddTorque(torqueLeme * Time.fixedDeltaTime, ForceMode.VelocityChange);
-                }
-            }
-
-            if (boatCanceledSuperJump)
-            {
-                boatCanceledSuperJump = false;
-
-                if (canJump)
-                {
-                    canJump = false;
-
-                    if (timeCharging <= timeJumpNormal)
+                    if (Mathf.Abs(posicaoBoat.z) > 0.01f)
                     {
-                        rigBoat.AddForce(forceJumpNormal, ForceMode.Impulse);
+                        Vector3 forcaMotor = transform.forward * posicaoBoat.z * speedBoat;
+                        rigBoat.AddForce(forcaMotor * Time.fixedDeltaTime, ForceMode.VelocityChange);
                     }
-                    else
-                    {
-                        float porcentagemCarga = timeCharging / timeChargeMax;
-                        float forcaVerticalFinal = forceJumpVerticalMax * porcentagemCarga;
-                        float forcaHorizontalFinal = forceJumpHorizontalMax * porcentagemCarga;
 
-                        Vector3 direcaoSuperPulo = (transform.up * forcaVerticalFinal) + (transform.forward * forcaHorizontalFinal);
-                        rigBoat.AddForce(direcaoSuperPulo, ForceMode.Impulse);
+                    if (Mathf.Abs(posicaoBoat.x) > 0.01f)
+                    {
+                        Vector3 torqueLeme = transform.up * posicaoBoat.x * speedBoatRotation;
+                        rigBoat.AddTorque(torqueLeme * Time.fixedDeltaTime, ForceMode.VelocityChange);
                     }
                 }
-                timeCharging = 0f;
+
+                if (boatCanceledSuperJump)
+                {
+                    boatCanceledSuperJump = false;
+
+                    if (canJump)
+                    {
+                        canJump = false;
+
+                        if (timeCharging <= timeJumpNormal)
+                        {
+                            rigBoat.AddForce(forceJumpNormal, ForceMode.Impulse);
+                        }
+                        else
+                        {
+                            float porcentagemCarga = timeCharging / timeChargeMax;
+                            float forcaVerticalFinal = forceJumpVerticalMax * porcentagemCarga;
+                            float forcaHorizontalFinal = forceJumpHorizontalMax * porcentagemCarga;
+
+                            Vector3 direcaoSuperPulo = (transform.up * forcaVerticalFinal) + (transform.forward * forcaHorizontalFinal);
+                            rigBoat.AddForce(direcaoSuperPulo, ForceMode.Impulse);
+                        }
+                    }
+                    timeCharging = 0f;
+                }
             }
         }
     }
 
     void Update()
     {
+        if (ScriptPlayerMoviment.boatCanMove)
+        {
+            boatCanMove = true;
+        }
         if (boatControllerAll)
         {
             if (boatController && boatChardingSuperJump && canJump)
@@ -154,6 +168,7 @@ public class BoatController : BoatInputs
                 }
             }
         }
+        Debug.Log(ScriptPlayerMoviment.boatCanMove);
     }
 
     public void takeDamage()
@@ -238,8 +253,11 @@ public class BoatController : BoatInputs
             if (animatorFishDown != null)
             {
                 animatorFishDown.SetTrigger("atack");
+
                 yield return new WaitForSeconds(0.5f);
                 audioFishEatBoat.Play();
+                yield return new WaitForSeconds(2f);
+                ChamarTelaGameOver();
             }
         }
 
@@ -250,7 +268,13 @@ public class BoatController : BoatInputs
 
         Destroy(gameObject);
     }
+    
+    public void ChamarTelaGameOver()
+    {
 
+        PanelGameOver2.SetActive(true);
+        
+    }
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("GroundBoat"))
